@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Joki\Progress;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProgressRequest;
 use App\Models\Order;
 use App\Models\ProgressLog;
+use App\Events\ProgressUpdated;
 use Illuminate\Http\Request;
 
 class ProgressController extends Controller
@@ -21,15 +23,11 @@ class ProgressController extends Controller
     /**
      * Booster/Admin posts a progress update with optional screenshot.
      */
-    public function store(Request $request, Order $order)
+    public function store(StoreProgressRequest $request, Order $order)
     {
         abort_unless($order->type === 'joki', 422);
 
-        $data = $request->validate([
-            'percent' => ['required', 'integer', 'min:0', 'max:100'],
-            'activity' => ['required', 'string', 'max:255'],
-            'screenshot' => ['nullable', 'image', 'max:4096'],
-        ]);
+        $data = $request->validated();
 
         $joki = $order->jokiOrder;
 
@@ -47,6 +45,9 @@ class ProgressController extends Controller
         ]);
 
         $joki->update(['progress' => $data['percent']]);
+
+        // Broadcast a domain event (queued to the notification/progress pipeline).
+        ProgressUpdated::dispatch($order, $log);
 
         return response()->json($log->load('author:id,name'), 201);
     }

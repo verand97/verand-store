@@ -1,0 +1,14 @@
+{
+    "name": "verand/verand-store",
+    "description": "Verand Store monorepo — Laravel API backend lives in ./backend.",
+    "type": "project",
+    "license": "proprietary",
+    "scripts": {
+        "post-root-package-install": [
+            "@php -r \"echo 'Backend Laravel app is in ./backend — run composer install there.';\""
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}

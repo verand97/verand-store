@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Joki;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SubmitAccountRequest;
 use App\Models\JokiOrder;
 use App\Models\Order;
 use App\Services\OrderService;
@@ -17,17 +18,12 @@ class JokiOrderController extends Controller
      * Customer submits account credentials so a booster can start work.
      * Moves the order from waiting_for_account -> processing.
      */
-    public function submitAccount(Request $request, Order $order)
+    public function submitAccount(SubmitAccountRequest $request, Order $order)
     {
         abort_unless($order->user_id === $request->user()->id, 403);
         abort_unless($order->type === 'joki', 422, 'Bukan pesanan joki.');
 
-        $data = $request->validate([
-            'game_uid' => ['nullable', 'string', 'max:50'],
-            'game_server' => ['nullable', 'string', 'max:50'],
-            'account_login' => ['required', 'string', 'max:255'],
-            'account_password' => ['required', 'string', 'max:255'],
-        ]);
+        $data = $request->validated();
 
         $joki = $order->jokiOrder;
         $joki->update($data);

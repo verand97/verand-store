@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Order;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreOrderRequest;
 use App\Models\Order;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class OrderController extends Controller
 {
@@ -22,21 +22,9 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 
-    public function store(Request $request)
+    public function store(StoreOrderRequest $request)
     {
-        $data = $request->validate([
-            'type' => ['required', Rule::in(['topup', 'joki'])],
-            'items' => ['required', 'array', 'min:1'],
-            'items.*.product_id' => ['nullable', 'integer', 'exists:products,id'],
-            'items.*.name' => ['nullable', 'string'],
-            'items.*.price' => ['nullable', 'numeric', 'min:0'],
-            'items.*.quantity' => ['nullable', 'integer', 'min:1'],
-            'items.*.options' => ['nullable', 'array'],
-            'meta' => ['nullable', 'array'],
-            'joki' => ['nullable', 'array'],
-        ]);
-
-        $order = $this->orders->create($request->user()->id, $data);
+        $order = $this->orders->create($request->user()->id, $request->validated());
 
         return response()->json($order, 201);
     }

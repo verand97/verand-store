@@ -1,0 +1,10 @@
+{
+  "topic": "payment-created",
+  "description": "Dipublish saat pembayaran sebuah order diinisiasi.",
+  "partitions": 3,
+  "replication": 1,
+  "schema": {
+    "order_number": "string",
+    "amount": "number"
+  }
+}

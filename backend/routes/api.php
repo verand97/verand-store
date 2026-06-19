@@ -24,6 +24,11 @@ Route::get('/products/{slug}', [ProductController::class, 'show']);
 
 Route::post('/topup/validate-uid', [TopupController::class, 'validateUid']);
 
+// Joki service catalogues per game (public).
+Route::get('/joki/mobile-legends/services', [\App\Http\Controllers\Joki\MobileLegends\MobileLegendsController::class, 'services']);
+Route::get('/joki/genshin-impact/services', [\App\Http\Controllers\Joki\Genshin\GenshinController::class, 'services']);
+Route::get('/joki/honkai-star-rail/services', [\App\Http\Controllers\Joki\HonkaiStarRail\HonkaiStarRailController::class, 'services']);
+
 // Payment gateway webhook (signature-verified, no auth).
 Route::post('/payments/callback', [PaymentController::class, 'callback']);
 
@@ -64,6 +69,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // --- Booster + Admin ---
     Route::middleware('role:booster,admin')->group(function () {
         Route::get('/joki/queue', [JokiOrderController::class, 'queue']);
+        Route::get('/joki/booster/stats', [\App\Http\Controllers\Joki\Booster\BoosterController::class, 'stats']);
         Route::post('/orders/{order}/assign', [JokiOrderController::class, 'assign']);
         Route::post('/orders/{order}/transition', [JokiOrderController::class, 'transition']);
         Route::post('/orders/{order}/progress', [ProgressController::class, 'store']);

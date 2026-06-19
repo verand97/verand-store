@@ -1,0 +1,11 @@
+{
+  "topic": "notification",
+  "description": "Dipublish saat notifikasi perlu dikirim ke user.",
+  "partitions": 3,
+  "replication": 1,
+  "schema": {
+    "user_id": "number",
+    "title": "string",
+    "type": "string"
+  }
+}

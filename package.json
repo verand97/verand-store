@@ -1,0 +1,20 @@
+{
+  "name": "verand-store",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Platform top-up game & jasa joki (Mobile Legends, Genshin Impact, Honkai: Star Rail).",
+  "scripts": {
+    "dev": "powershell -ExecutionPolicy Bypass -File start-dev.ps1",
+    "backend": "php backend/artisan serve --host=127.0.0.1 --port=8000",
+    "frontend": "npm --prefix frontend run dev",
+    "build:frontend": "npm --prefix frontend run build",
+    "migrate": "php backend/artisan migrate --seed",
+    "test:backend": "php backend/artisan test"
+  },
+  "workspaces": [
+    "frontend"
+  ],
+  "engines": {
+    "node": ">=20"
+  }
+}

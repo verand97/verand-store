@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: verand-backend
+  labels: { app: verand-backend }
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: verand-backend }
+  template:
+    metadata:
+      labels: { app: verand-backend }
+    spec:
+      containers:
+        - name: backend
+          image: verand/backend:latest
+          ports: [{ containerPort: 8000 }]
+          envFrom:
+            - secretRef: { name: verand-secrets }
+          readinessProbe:
+            httpGet: { path: /api/health, port: 8000 }
+            initialDelaySeconds: 10
+            periodSeconds: 15
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: verand-frontend
+  labels: { app: verand-frontend }
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: verand-frontend }
+  template:
+    metadata:
+      labels: { app: verand-frontend }
+    spec:
+      containers:
+        - name: frontend
+          image: verand/frontend:latest
+          ports: [{ containerPort: 3000 }]
+          env:
+            - name: NEXT_PUBLIC_API_URL
+              value: "https://verand.store/api"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: verand-backend
+spec:
+  selector: { app: verand-backend }
+  ports: [{ port: 80, targetPort: 8000 }]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: verand-frontend
+spec:
+  selector: { app: verand-frontend }
+  ports: [{ port: 80, targetPort: 3000 }]

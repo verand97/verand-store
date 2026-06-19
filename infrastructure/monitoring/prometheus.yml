@@ -1,0 +1,22 @@
+# Prometheus scrape config for Verand Store.
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: "verand-backend"
+    metrics_path: /api/health
+    static_configs:
+      - targets: ["backend:8000"]
+
+  - job_name: "verand-frontend"
+    static_configs:
+      - targets: ["frontend:3000"]
+
+  - job_name: "mysql"
+    static_configs:
+      - targets: ["mysql-exporter:9104"]
+
+  - job_name: "kafka"
+    static_configs:
+      - targets: ["kafka-exporter:9308"]
