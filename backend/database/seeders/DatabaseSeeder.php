@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
 
         $this->seedTopup();
         $this->seedJoki();
+        $this->seedCombos();
     }
 
     private function make(array $attrs): void
@@ -101,6 +102,73 @@ class DatabaseSeeder extends Seeder
                 'price' => $price,
                 'unit' => $unit,
                 'meta' => ['difficulty' => $difficulty],
+                'is_active' => true,
+            ]);
+        }
+    }
+
+    /**
+     * Combo packages — only for account-maintenance games (Genshin & HSR).
+     * These bundle several services at a discounted flat price.
+     */
+    private function seedCombos(): void
+    {
+        $combos = [
+            // [game, slug-suffix, name, price, difficulty, duration, includes[]]
+            [
+                'genshin-impact', 'combo-starter', 'Combo Starter — Daily 7 Hari',
+                65000, 2, '7 hari',
+                ['Daily Commission 7 hari', 'Klaim reward login', 'Pemakaian Resin efisien', 'Farming material dasar'],
+                'Hemat 20% dibanding beli satuan. Cocok untuk pemain sibuk.',
+            ],
+            [
+                'genshin-impact', 'combo-weekly', 'Combo Weekly Care — All In One',
+                160000, 3, '1 minggu',
+                ['Daily Commission 7 hari', 'Weekly Boss (3x)', 'Klaim Battle Pass & event', 'Domain & material farming', 'Spiral Abyss (opsional)'],
+                'Paket terlengkap perawatan akun mingguan. Hemat 25%.',
+            ],
+            [
+                'genshin-impact', 'combo-explore', 'Combo Explorer — Region Tuntas',
+                275000, 4, '5-10 hari',
+                ['Eksplorasi 1 region ke 100%', 'Pengumpulan Oculus', 'Buka semua Waypoint & Statue', 'Chest & puzzle', 'Story Quest region terkait'],
+                'Buka 1 region penuh + cerita terkait. Hemat 30%.',
+            ],
+            [
+                'honkai-star-rail', 'combo-starter', 'Combo Starter — Daily 7 Hari',
+                65000, 2, '7 hari',
+                ['Daily Training 7 hari', 'Klaim reward login', 'Pemakaian Trailblaze Power efisien', 'Farming relic dasar'],
+                'Hemat 20% dibanding beli satuan. Cocok untuk pemain sibuk.',
+            ],
+            [
+                'honkai-star-rail', 'combo-weekly', 'Combo Weekly Care — All In One',
+                160000, 3, '1 minggu',
+                ['Daily Training 7 hari', 'Echo of War (3x)', 'Simulated Universe', 'Klaim Nameless Honor & event', 'Memory of Chaos (opsional)'],
+                'Paket terlengkap perawatan akun mingguan. Hemat 25%.',
+            ],
+            [
+                'honkai-star-rail', 'combo-explore', 'Combo Explorer — Area Tuntas',
+                275000, 4, '5-10 hari',
+                ['Eksplorasi 1 area ke 100%', 'Pengumpulan Treasure & chest', 'Buka semua Space Anchor', 'Puzzle & hidden quest', 'Trailblaze Mission area terkait'],
+                'Buka 1 area penuh + misi terkait. Hemat 30%.',
+            ],
+        ];
+
+        foreach ($combos as [$game, $suffix, $name, $price, $difficulty, $duration, $includes, $desc]) {
+            $this->make([
+                'game' => $game,
+                'type' => 'joki',
+                'category' => 'combo',
+                'name' => $name,
+                'slug' => "{$game}-{$suffix}",
+                'description' => $desc,
+                'price' => $price,
+                'unit' => 'paket',
+                'meta' => [
+                    'difficulty' => $difficulty,
+                    'is_combo' => true,
+                    'duration' => $duration,
+                    'includes' => $includes,
+                ],
                 'is_active' => true,
             ]);
         }
