@@ -87,31 +87,6 @@ verand-store/
 │       ├── services/
 │       ├── utils/
 │       └── styles/
-│
-├── ai-service/
-│   ├── chatbot/
-│   ├── recommendation/
-│   ├── pricing/
-│   └── webhook/
-│
-├── kafka/
-│   ├── producer/
-│   ├── consumer/
-│   └── topics/
-│       ├── payment-created
-│       ├── payment-success
-│       ├── topup-process
-│       ├── joki-process
-│       ├── progress-update
-│       └── notification
-│
-├── integrations/
-│   ├── midtrans/
-│   ├── game-voucher/
-│   ├── genshin-api/
-│   ├── hsr-api/
-│   └── notification/
-│
 ├── docs/
 │   ├── api/
 │   ├── database/

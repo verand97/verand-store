@@ -1,9 +1,0 @@
-{
-  "topic": "payment-success",
-  "description": "Dipublish saat pembayaran terverifikasi (callback Midtrans).",
-  "partitions": 3,
-  "replication": 1,
-  "schema": {
-    "order_number": "string"
-  }
-}

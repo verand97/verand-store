@@ -77,10 +77,8 @@ kosong, sistem otomatis memakai **stub** yang aman agar alur tetap dapat diuji:
 | Game voucher/UID | Validasi stub              | API penyedia |
 
 ## Struktur Proyek
-Lihat `Verand-Store-Struktur-Folder.md`. Komponen yang sudah diimplementasikan:
-`backend/` (Laravel API) dan `frontend/` (Next.js). Folder `ai-service/`, `kafka/`,
-`integrations/`, `infrastructure/` berisi titik integrasi & dokumentasi untuk
-pengembangan lanjutan.
+Lihat `Verand-Store-Struktur-Folder.md`. Komponen yang diimplementasikan:
+`backend/` (Laravel API) dan `frontend/` (Next.js). Folder `infrastructure/` berisi konfigurasi deployment (Docker, Nginx, Kubernetes, Terraform) dan dokumentasi proyek terdapat di folder `docs/`.
 
 ## API
 Lihat `docs/api/README.md` untuk daftar endpoint lengkap.

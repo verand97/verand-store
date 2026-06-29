@@ -1,9 +1,0 @@
-{
-  "topic": "topup-process",
-  "description": "Memicu pengiriman currency in-game untuk order top-up yang sudah dibayar.",
-  "partitions": 3,
-  "replication": 1,
-  "schema": {
-    "order_number": "string"
-  }
-}

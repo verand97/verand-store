@@ -1,9 +1,0 @@
-{
-  "topic": "joki-process",
-  "description": "Memasukkan order joki ke antrean booster setelah pembayaran.",
-  "partitions": 3,
-  "replication": 1,
-  "schema": {
-    "order_number": "string"
-  }
-}
