@@ -9,7 +9,12 @@ export function CartProvider({ children }) {
 
   useEffect(() => {
     const saved = localStorage.getItem("vs_cart");
-    if (saved) setItems(JSON.parse(saved));
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        queueMicrotask(() => setItems(parsed));
+      } catch (_) {}
+    }
   }, []);
 
   useEffect(() => {

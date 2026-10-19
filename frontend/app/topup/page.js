@@ -67,17 +67,22 @@ function TopupContent() {
   const currentInfo = GAME_INFO[game] || GAME_INFO["mobile-legends"];
 
   useEffect(() => {
+    let ignore = false;
     api.products({ type: "topup", game })
       .then((data) => {
+        if (ignore) return;
         setProducts(data);
-        if (data.length > 0 && !selectedProduct) {
-          // Pre-select popular product
-          const popular = data.find((p) => p.meta?.popular) || data[0];
-          setSelectedProduct(popular);
-        }
+        setSelectedProduct((prev) => {
+          if (!prev || prev.game !== game) {
+            return data.find((p) => p.meta?.popular) || data[0] || null;
+          }
+          return prev;
+        });
       })
       .catch(() => {});
-    setValidation(null);
+    return () => {
+      ignore = true;
+    };
   }, [game]);
 
   async function checkUid() {

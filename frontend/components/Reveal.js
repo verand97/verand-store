@@ -14,7 +14,7 @@ export default function Reveal({ children, delay = 0, as: Tag = "div", className
     const node = ref.current;
     if (!node) return;
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
-      setShown(true);
+      queueMicrotask(() => setShown(true));
       return;
     }
     const io = new IntersectionObserver(

@@ -14,7 +14,10 @@ export function usePolling(fetcher, intervalMs = 5000) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const savedFetcher = useRef(fetcher);
-  savedFetcher.current = fetcher;
+
+  useEffect(() => {
+    savedFetcher.current = fetcher;
+  }, [fetcher]);
 
   const refresh = useCallback(async () => {
     try {

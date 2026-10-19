@@ -16,23 +16,27 @@ export default function OrderDetailPage({ params }) {
   const [account, setAccount] = useState({ account_login: "", account_password: "", game_uid: "", game_server: "" });
   const [msg, setMsg] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [reloadTrigger, setReloadTrigger] = useState(0);
 
-  async function load() {
-    try {
-      const o = await api.order(id);
-      setOrder(o);
-      if (o.type === "joki") {
-        try {
-          const p = await api.progress(id);
-          setProgress(p);
-        } catch (_) {}
-      }
-    } catch (err) {
-      setMsg(err.message);
-    }
-  }
-
-  useEffect(() => { load(); }, [id]);
+  useEffect(() => {
+    let ignore = false;
+    api.order(id)
+      .then((o) => {
+        if (ignore) return;
+        setOrder(o);
+        if (o.type === "joki") {
+          api.progress(id).then((p) => {
+            if (!ignore) setProgress(p);
+          }).catch(() => {});
+        }
+      })
+      .catch((err) => {
+        if (!ignore) setMsg(err.message);
+      });
+    return () => {
+      ignore = true;
+    };
+  }, [id, reloadTrigger]);
 
   async function submitAccount(e) {
     e.preventDefault();
@@ -41,7 +45,7 @@ export default function OrderDetailPage({ params }) {
     try {
       await api.submitAccount(id, account);
       setMsg("Data akun berhasil dikirimkan dengan enkripsi. Booster akan segera mulai pengerjaan.");
-      load();
+      setReloadTrigger((n) => n + 1);
     } catch (err) {
       setMsg(err.message);
     } finally {
@@ -78,7 +82,7 @@ export default function OrderDetailPage({ params }) {
           </span>
           <h1 style={{ margin: "2px 0", fontSize: "clamp(24px, 3.5vw, 34px)" }}>{order.order_number}</h1>
           <div className="muted" style={{ fontSize: 13 }}>
-            Dibuat pada: {new Date(order.created_at || Date.now()).toLocaleString("id-ID")}
+            Dibuat pada: {order.created_at ? new Date(order.created_at).toLocaleString("id-ID") : "-"}
           </div>
         </div>
 

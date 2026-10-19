@@ -411,7 +411,7 @@ export default function Home() {
                 {"★".repeat(rev.rating)}
               </div>
               <p style={{ fontSize: 13, lineHeight: 1.5, margin: "0 0 14px", color: "var(--text)" }}>
-                "{rev.comment}"
+                &ldquo;{rev.comment}&rdquo;
               </p>
               <div className="review-author">
                 <div className="review-avatar">{rev.avatar}</div>

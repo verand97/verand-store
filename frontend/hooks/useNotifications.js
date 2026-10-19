@@ -9,13 +9,10 @@ import { getToken } from "@/services/api";
  */
 export function useNotifications(pollMs = 15000) {
   const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => (typeof window !== "undefined" ? !!getToken() : false));
 
   const load = useCallback(async () => {
-    if (!getToken()) {
-      setLoading(false);
-      return;
-    }
+    if (!getToken()) return;
     try {
       setItems(await api.notifications());
     } catch (_) {
@@ -26,9 +23,22 @@ export function useNotifications(pollMs = 15000) {
   }, []);
 
   useEffect(() => {
-    load();
+    if (!getToken()) return;
+    let ignore = false;
+    api.notifications().then((data) => {
+      if (!ignore) {
+        setItems(data);
+        setLoading(false);
+      }
+    }).catch(() => {
+      if (!ignore) setLoading(false);
+    });
+
     const id = setInterval(load, pollMs);
-    return () => clearInterval(id);
+    return () => {
+      ignore = true;
+      clearInterval(id);
+    };
   }, [load, pollMs]);
 
   const unread = items.filter((n) => !n.read_at).length;

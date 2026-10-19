@@ -19,13 +19,30 @@ export default function BoosterPage() {
     }
   }, [loading, user, router]);
 
-  async function load() {
-    try { setQueue(await api.jokiQueue()); } catch (err) { setMsg(err.message); }
-  }
-  useEffect(() => { if (user) load(); }, [user]);
+  const [reloadTrigger, setReloadTrigger] = useState(0);
+
+  useEffect(() => {
+    if (!user) return;
+    let ignore = false;
+    api.jokiQueue()
+      .then((data) => {
+        if (!ignore) setQueue(data);
+      })
+      .catch((err) => {
+        if (!ignore) setMsg(err.message);
+      });
+    return () => {
+      ignore = true;
+    };
+  }, [user, reloadTrigger]);
 
   async function take(orderId) {
-    try { await api.assign(orderId); load(); } catch (err) { alert(err.message); }
+    try {
+      await api.assign(orderId);
+      setReloadTrigger((n) => n + 1);
+    } catch (err) {
+      alert(err.message);
+    }
   }
 
   if (loading || !user) return <div className="container" style={{ paddingTop: 40 }}>Memuat…</div>;

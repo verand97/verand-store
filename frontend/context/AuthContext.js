@@ -13,7 +13,7 @@ export function AuthProvider({ children }) {
     if (getToken()) {
       api.me().then(setUser).catch(() => setToken(null)).finally(() => setLoading(false));
     } else {
-      setLoading(false);
+      queueMicrotask(() => setLoading(false));
     }
   }, []);
 

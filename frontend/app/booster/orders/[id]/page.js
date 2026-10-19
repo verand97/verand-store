@@ -14,14 +14,25 @@ export default function BoosterOrderPage({ params }) {
   const [form, setForm] = useState({ percent: 0, activity: "" });
   const [file, setFile] = useState(null);
   const [msg, setMsg] = useState("");
+  const [reloadTrigger, setReloadTrigger] = useState(0);
 
-  async function load() {
-    const o = await api.order(id);
-    setOrder(o);
-    setProgress(await api.progress(id));
-    if (o.joki_order) setForm((f) => ({ ...f, percent: o.joki_order.progress }));
-  }
-  useEffect(() => { load().catch((e) => setMsg(e.message)); }, [id]);
+  useEffect(() => {
+    let ignore = false;
+    api.order(id)
+      .then(async (o) => {
+        if (ignore) return;
+        setOrder(o);
+        if (o.joki_order) setForm((f) => ({ ...f, percent: o.joki_order.progress }));
+        const p = await api.progress(id);
+        if (!ignore) setProgress(p);
+      })
+      .catch((e) => {
+        if (!ignore) setMsg(e.message);
+      });
+    return () => {
+      ignore = true;
+    };
+  }, [id, reloadTrigger]);
 
   async function postProgress(e) {
     e.preventDefault();
@@ -31,9 +42,9 @@ export default function BoosterOrderPage({ params }) {
     if (file) fd.append("screenshot", file);
     try {
       await api.postProgress(id, fd);
-      setForm({ ...form, activity: "" });
+      setForm((prev) => ({ ...prev, activity: "" }));
       setFile(null);
-      load();
+      setReloadTrigger((n) => n + 1);
     } catch (err) { setMsg(err.message); }
   }
 

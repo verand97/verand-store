@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -28,23 +28,7 @@ export default function JokiGamePage({ params }) {
   const schema = JOKI_FORM_SCHEMA[game] || JOKI_FORM_SCHEMA["mobile-legends"];
   const bannerImage = GAME_BANNERS[game] || GAME_BANNERS["mobile-legends"];
 
-  useEffect(() => {
-    api.products({ type: "joki", game })
-      .then((data) => {
-        setProducts(data);
-        if (data.length > 0 && !selected) {
-          // Pre-select first service or combo
-          const first = data.find((p) => p.meta?.is_combo) || data[0];
-          selectService(first);
-        }
-      })
-      .catch(() => {});
-  }, [game]);
-
-  const combos = useMemo(() => products.filter((p) => p.meta?.is_combo), [products]);
-  const singles = useMemo(() => products.filter((p) => !p.meta?.is_combo), [products]);
-
-  async function selectService(p) {
+  const selectService = useCallback(async (p) => {
     if (!p) return;
     setSelected(p);
     setDetails({});
@@ -57,7 +41,27 @@ export default function JokiGamePage({ params }) {
       });
       setQuote(q);
     } catch (_) {}
-  }
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+    api.products({ type: "joki", game })
+      .then((data) => {
+        if (ignore) return;
+        setProducts(data);
+        if (data.length > 0) {
+          const first = data.find((p) => p.meta?.is_combo) || data[0];
+          selectService(first);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      ignore = true;
+    };
+  }, [game, selectService]);
+
+  const combos = useMemo(() => products.filter((p) => p.meta?.is_combo), [products]);
+  const singles = useMemo(() => products.filter((p) => !p.meta?.is_combo), [products]);
 
   function order() {
     if (!selected) return;

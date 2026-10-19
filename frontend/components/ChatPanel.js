@@ -8,19 +8,25 @@ export default function ChatPanel({ orderId }) {
   const { user } = useAuth();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const endRef = useRef(null);
-
-  async function load() {
+  const load = useCallback(async () => {
     try {
-      setMessages(await api.chats(orderId));
+      const data = await api.chats(orderId);
+      setMessages(data);
     } catch (_) {}
-  }
+  }, [orderId]);
 
   useEffect(() => {
-    load();
-    const t = setInterval(load, 5000); // simple polling
-    return () => clearInterval(t);
-  }, [orderId]);
+    let ignore = false;
+    api.chats(orderId).then((data) => {
+      if (!ignore) setMessages(data);
+    }).catch(() => {});
+
+    const t = setInterval(load, 5000);
+    return () => {
+      ignore = true;
+      clearInterval(t);
+    };
+  }, [orderId, load]);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
