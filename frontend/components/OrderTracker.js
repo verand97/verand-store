@@ -2,50 +2,55 @@
 
 import { statusColor } from "@/utils/format";
 
-const STEPS = [
-  { key: "pending", label: "Dibuat" },
-  { key: "waiting_for_account", label: "Menunggu Akun" },
-  { key: "processing", label: "Dikerjakan" },
-  { key: "completed", label: "Selesai" },
-  { key: "finished", label: "Tuntas" },
+const JOKI_STEPS = [
+  { key: "pending", label: "Menunggu Bayar", desc: "Invoice dibuat" },
+  { key: "waiting_for_account", label: "Menunggu Akun", desc: "Kirim data akun" },
+  { key: "processing", label: "Dikerjakan", desc: "Pro booster aktif" },
+  { key: "completed", label: "Selesai", desc: "Hasil tercapai" },
+  { key: "finished", label: "Tuntas", desc: "Verifikasi tuntas" },
 ];
 
 const TOPUP_STEPS = [
-  { key: "pending", label: "Dibuat" },
-  { key: "processing", label: "Diproses" },
-  { key: "finished", label: "Terkirim" },
+  { key: "pending", label: "Menunggu Bayar", desc: "Invoice dibuat" },
+  { key: "processing", label: "Diproses Otomatis", desc: "Mengirim diamond" },
+  { key: "finished", label: "Terkirim", desc: "Masuk ke akun" },
 ];
 
 export default function OrderTracker({ status, type }) {
   if (status === "cancelled") {
-    return <div className="pill" style={{ background: "#ef444422", color: "#ef4444" }}>Pesanan Dibatalkan</div>;
+    return (
+      <div className="pill" style={{ background: "var(--danger-soft)", color: "var(--danger)", border: "1px solid rgba(244, 63, 94, 0.3)", padding: "8px 16px" }}>
+        ✕ Pesanan Dibatalkan
+      </div>
+    );
   }
 
-  const steps = type === "joki" ? STEPS : TOPUP_STEPS;
+  const steps = type === "joki" ? JOKI_STEPS : TOPUP_STEPS;
   const currentIndex = steps.findIndex((s) => s.key === status);
+  const activeIndex = currentIndex === -1 ? 0 : currentIndex;
 
   return (
-    <div className="row wrap" style={{ gap: 0 }}>
-      {steps.map((step, i) => {
-        const done = i <= currentIndex;
-        return (
-          <div key={step.key} className="row" style={{ flex: 1, minWidth: 80 }}>
-            <div style={{ textAlign: "center", flex: 1 }}>
-              <div style={{
-                width: 30, height: 30, borderRadius: "50%", margin: "0 auto 6px",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                background: done ? statusColor(status) : "var(--bg-2)",
-                border: "2px solid " + (done ? statusColor(status) : "var(--border)"),
-                color: "#fff", fontSize: 13, fontWeight: 700,
-              }}>{done ? "✓" : i + 1}</div>
-              <div className="muted" style={{ fontSize: 11 }}>{step.label}</div>
+    <div className="order-stepper-wrap" style={{ width: "100%", padding: "10px 0" }}>
+      <div className="order-stepper">
+        {steps.map((step, i) => {
+          const isDone = i < activeIndex;
+          const isActive = i === activeIndex;
+          return (
+            <div key={step.key} style={{ display: "contents" }}>
+              <div className={`step-node ${isDone ? "done" : ""} ${isActive ? "active" : ""}`}>
+                <div className="step-circle">
+                  {isDone ? "✓" : i + 1}
+                </div>
+                <span className="step-node-label">{step.label}</span>
+                <span className="muted" style={{ fontSize: 10, marginTop: 2 }}>{step.desc}</span>
+              </div>
+              {i < steps.length - 1 && (
+                <div className={`step-connector ${i < activeIndex ? "done" : ""}`} />
+              )}
             </div>
-            {i < steps.length - 1 && (
-              <div style={{ height: 2, flex: 1, background: i < currentIndex ? statusColor(status) : "var(--border)", marginBottom: 18 }} />
-            )}
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }
