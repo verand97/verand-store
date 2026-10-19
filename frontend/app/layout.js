@@ -1,4 +1,4 @@
-import { Space_Grotesk, Syne } from "next/font/google";
+import { Plus_Jakarta_Sans, Outfit } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext";
@@ -7,22 +7,22 @@ import Footer from "@/components/Footer";
 import Chatbot from "@/components/Chatbot";
 import BackgroundFX from "@/components/BackgroundFX";
 
-const sans = Space_Grotesk({
+const sans = Plus_Jakarta_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-const display = Syne({
+const display = Outfit({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
+  weight: ["600", "700", "800", "900"],
 });
 
 export const metadata = {
-  title: "Verand Store — Top-up Game & Jasa Joki",
+  title: "Verand Store — Top-up Game Kilat & Jasa Joki Profesional",
   description:
-    "Platform top-up game dan jasa joki profesional untuk Mobile Legends, Genshin Impact, dan Honkai: Star Rail.",
+    "Platform top-up game instan 1-3 menit & jasa joki terpercaya Mobile Legends, Genshin Impact, dan Honkai: Star Rail. 100% Anti-Ban & Garansi Bintang.",
 };
 
 export default function RootLayout({ children }) {
