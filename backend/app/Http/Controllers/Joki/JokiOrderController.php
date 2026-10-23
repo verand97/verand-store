@@ -26,6 +26,7 @@ class JokiOrderController extends Controller
         $data = $request->validated();
 
         $joki = $order->jokiOrder;
+        abort_unless($joki !== null, 422, 'Detail joki tidak ditemukan.');
         $joki->update($data);
 
         if ($order->status === 'waiting_for_account') {
@@ -59,6 +60,7 @@ class JokiOrderController extends Controller
             ? $request->validate(['booster_id' => ['required', 'exists:users,id']])['booster_id']
             : $user->id;
 
+        abort_unless($order->jokiOrder !== null, 422, 'Detail joki tidak ditemukan.');
         $order->jokiOrder->update(['booster_id' => $boosterId]);
 
         return response()->json($order->fresh()->load('jokiOrder.booster:id,name'));

@@ -30,6 +30,7 @@ class ProgressController extends Controller
         $data = $request->validated();
 
         $joki = $order->jokiOrder;
+        abort_unless($joki !== null, 422, 'Detail joki tidak ditemukan.');
 
         $path = null;
         if ($request->hasFile('screenshot')) {

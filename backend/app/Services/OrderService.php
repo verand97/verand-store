@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Chat;
 use App\Models\JokiOrder;
 use App\Models\Notification;
 use App\Models\Order;
@@ -160,7 +159,6 @@ class OrderService
             );
         }
 
-        $order->update(['status' => 'completed']);
         $order->update(['status' => 'finished']);
         $this->notify($order->user_id, 'Top-up selesai',
             "Top-up pesanan {$order->order_number} telah dikirim.", 'order');
