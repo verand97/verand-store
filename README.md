@@ -38,7 +38,16 @@ dynamic pricing).
 - Node.js 20+, npm
 - MySQL 8
 
-### Backend (Laravel API)
+### Cara Cepat (Satu Perintah)
+```bash
+# Menjalankan backend & frontend sekaligus
+npm run dev        # Windows (PowerShell)
+npm run dev:sh     # Linux / macOS / WSL
+```
+
+### Manual
+
+#### Backend (Laravel API)
 ```bash
 cd backend
 composer install
@@ -49,12 +58,12 @@ php artisan storage:link
 php artisan serve            # http://127.0.0.1:8000
 ```
 
-### Frontend (Next.js)
+#### Frontend (Next.js)
 ```bash
 cd frontend
 npm install
-# .env.local: NEXT_PUBLIC_API_URL=http://127.0.0.1:8000/api
-npm run dev                  # http://localhost:3000
+cp .env.example .env.local  # NEXT_PUBLIC_API_URL=http://127.0.0.1:8000/api
+npm run dev                 # http://localhost:3000
 ```
 
 ### Akun Demo (setelah seed)
@@ -76,9 +85,14 @@ kosong, sistem otomatis memakai **stub** yang aman agar alur tetap dapat diuji:
 | AI               | Rule-based bawaan          | Microservice (`AI_MODE=remote`) |
 | Game voucher/UID | Validasi stub              | API penyedia |
 
-## Struktur Proyek
-Lihat `Verand-Store-Struktur-Folder.md`. Komponen yang diimplementasikan:
-`backend/` (Laravel API) dan `frontend/` (Next.js). Folder `infrastructure/` berisi konfigurasi deployment (Docker, Nginx, Kubernetes, Terraform) dan dokumentasi proyek terdapat di folder `docs/`.
+## 📚 Dokumentasi Lengkap (`docs/`)
 
-## API
-Lihat `docs/api/README.md` untuk daftar endpoint lengkap.
+Kunjungi folder [`docs/`](./docs/README.md) untuk dokumentasi teknis mendalam:
+* [**API Reference**](./docs/api/README.md) — Endpoint REST API lengkap, payload, dan respons.
+* [**Arsitektur Sistem**](./docs/architecture/README.md) — Struktur decouple Next.js, Laravel, Kafka, dan AI.
+* [**Basis Data**](./docs/database/README.md) — Skema tabel MySQL, tipe data, dan relasi.
+* [**Entity Relationship Diagram (ERD)**](./docs/erd/README.md) — Visualisasi Mermaid relasi tabel.
+* [**Flowchart Alur Bisnis**](./docs/flowchart/README.md) — Alur transaksi top-up & siklus pengerjaan joki.
+* [**Sequence Diagram**](./docs/sequence-diagram/README.md) — Diagram alur sekuensial pembayaran & progres.
+* [**Panduan Deployment**](./docs/deployment/README.md) — Setup Docker, Nginx, Kubernetes, dan Terraform.
+

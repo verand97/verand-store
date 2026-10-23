@@ -5,6 +5,7 @@
   "description": "Platform top-up game & jasa joki (Mobile Legends, Genshin Impact, Honkai: Star Rail).",
   "scripts": {
     "dev": "powershell -ExecutionPolicy Bypass -File start-dev.ps1",
+    "dev:sh": "bash scripts/start-dev.sh",
     "backend": "php backend/artisan serve --host=127.0.0.1 --port=8000",
     "frontend": "npm --prefix frontend run dev",
     "build:frontend": "npm --prefix frontend run build",

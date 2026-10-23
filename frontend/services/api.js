@@ -1,5 +1,7 @@
 "use client";
 
+import { DEFAULT_PRODUCTS } from "@/utils/catalogData";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api";
 
 export function getToken() {
@@ -38,8 +40,6 @@ async function request(path, { method = "GET", body, auth = true, isForm = false
 
   return data;
 }
-
-import { DEFAULT_PRODUCTS } from "@/utils/catalogData";
 
 export const api = {
   // Auth
